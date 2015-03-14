@@ -8,6 +8,13 @@ OVERRIDE(KoreanURLShortener.LinkModel, function(origin) {
 		},
 
 		init : function(inner, self, params) {
+			
+			var
+			//IMPORT: http
+			http = require('http'),
+			
+			//IMPORT: https
+			https = require('https');
 
 			inner.on('create', {
 
@@ -60,18 +67,56 @@ OVERRIDE(KoreanURLShortener.LinkModel, function(origin) {
 						data.url = url = 'http://' + url;
 					}
 					
-					// 해당 URL이 이미 있으면 그것을 반환
-					self.get({
-						filter : {
-							url : url
-						}
-					}, {
-						notExists : f,
-						success : function(savedData) {
+					(url.substring(0, 7) === 'http://' ? http : https).get(url, function(res) {
+						
+						if (res.statusCode === 200 || res.statusCode === 301 || res.statusCode === 302) {
+							
+							var
+							// phantom
+							phantom = require('child_process').spawn('phantomjs', [NODE_CONFIG.rootPath + '/screencapture.js', encodeURIComponent(url)]);
+						    
+						    phantom.on('error', function() {
+								// ignore.
+						    });
+						    
+						    phantom.on('exit', function() {
+								
+						    });
+							
+							// 해당 URL이 이미 있으면 그것을 반환
+							self.get({
+								filter : {
+									url : url
+								}
+							}, {
+								success : function(savedData) {
+									ret({
+										savedData : savedData
+									});
+								},
+								notExists : function() {
+									f();
+								}
+							});
+						
+						} else {
 							ret({
-								savedData : savedData
+								validErrors : {
+									url : {
+										type : 'wrongURL'
+									}
+								}
 							});
 						}
+						
+					}).on('error', function() {
+						ret({
+							validErrors : {
+								url : {
+									type : 'wrongURL'
+								}
+							}
+						});
 					});
 
 					return false;

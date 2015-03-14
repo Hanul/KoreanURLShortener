@@ -5,7 +5,13 @@ KoreanURLShortener.MAIN = METHOD({
 		
 		var
 		// preview
-		preview;
+		preview,
+		
+		// recent
+		recent,
+		
+		// rank
+		rank;
 		
 		DIV({
 			c : [
@@ -76,10 +82,31 @@ KoreanURLShortener.MAIN = METHOD({
 				on : {
 					submit : function(e, form) {
 						
-						KoreanURLShortener.LinkModel.create(form.getData(), function(savedData) {
-							preview.setHref('http://짧.한국/' + savedData.id);
-							preview.empty();
-							preview.append('http://짧.한국/' + savedData.id);
+						preview.empty();
+						preview.append('짧아지는 중...');
+						preview.setHref('http://짧.한국');
+						
+						KoreanURLShortener.LinkModel.create(form.getData(), {
+							
+							notValid : function(validErrors) {
+								if (validErrors.url !== undefined && validErrors.url.type === 'wrongURL') {
+									alert('잘못된 URL 입니다!');
+								}
+								preview.empty();
+								preview.append('http://짧.한국/하늘');
+								preview.setHref('http://짧.한국/하늘');
+							},
+							
+							success : function(savedData) {
+								
+								preview.empty();
+								preview.append('http://짧.한국/' + savedData.id);
+								preview.setHref('http://짧.한국/' + savedData.id);
+								
+								preview.append(IMG({
+									src : KoreanURLShortener.RF(encodeURIComponent(savedData.url))
+								}));
+							}
 						});
 					}
 				}
@@ -103,6 +130,40 @@ KoreanURLShortener.MAIN = METHOD({
 				})
 			}),
 			
+			// recent
+			recent = DIV({
+				style : {
+					width : 300,
+					margin : 'auto',
+					marginTop : 40
+				},
+				c : H2({
+					style : {
+						textAlign : 'center',
+						fontWeight : 'bold',
+						marginBottom : 10
+					},
+					c : '최신 URL'
+				})
+			}),
+			
+			// rank
+			rank = DIV({
+				style : {
+					width : 300,
+					margin : 'auto',
+					marginTop : 40
+				},
+				c : H2({
+					style : {
+						textAlign : 'center',
+						fontWeight : 'bold',
+						marginBottom : 10
+					},
+					c : '인기 URL'
+				})
+			}),
+			
 			// footer
 			DIV({
 				style : {
@@ -114,8 +175,61 @@ KoreanURLShortener.MAIN = METHOD({
 					href : 'https://www.facebook.com/mr.hanul',
 					target : '_blank',
 					c : '심영재'
-				}), '가 만들었다.']
+				}), '가 만들었어요.']
 			})]
 		}).appendTo(BODY);
+		
+		KoreanURLShortener.LinkModel.find({
+			count : 5
+		}, EACH(function(savedData) {
+			recent.append(DIV({
+				style : {
+					marginTop : 5
+				},
+				c : [A({
+					style : {
+						flt : 'left'
+					},
+					href : 'http://짧.한국/' + savedData.id,
+					c : 'http://짧.한국/' + savedData.id
+				}), DIV({
+					style : {
+						width : 175,
+						marginLeft : 10,
+						flt : 'right',
+						color : '#999'
+					},
+					c : savedData.url
+				}), CLEAR_BOTH()]
+			}));
+		}));
+		
+		KoreanURLShortener.LinkModel.find({
+			sort : {
+				count : -1
+			},
+			count : 5
+		}, EACH(function(savedData) {
+			rank.append(DIV({
+				style : {
+					marginTop : 5
+				},
+				c : [A({
+					style : {
+						flt : 'left'
+					},
+					href : 'http://짧.한국/' + savedData.id,
+					c : 'http://짧.한국/' + savedData.id
+				}), DIV({
+					style : {
+						width : 175,
+						marginLeft : 10,
+						flt : 'right',
+						color : '#999'
+					},
+					c : savedData.url
+				}), CLEAR_BOTH()]
+			}));
+		}));
 	}
 });

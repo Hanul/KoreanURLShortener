@@ -8,7 +8,7 @@ BOOT({
 		defaultBoxName : 'KoreanURLShortener',
 		
 		title : '짧.한국',
-		description : '한글 단축 URL',
+		description : '한글 URL 단축 서비스',
 
 		webServerPort : 8314,
 		
@@ -18,5 +18,9 @@ BOOT({
 
 	NODE_CONFIG : {
 		dbName : 'KoreanURLShortener-test'
+	},
+	
+	BROWSER_CONFIG : {
+		//host : 'xn--ed6b.xn--3e0b707e'
 	}
 });
