@@ -63,60 +63,58 @@ OVERRIDE(KoreanURLShortener.LinkModel, function(origin) {
 						}
 					};
 					
+					// http나 https가 안붙어 있으면 붙혀줍니다.
 					if (url.substring(0, 7) !== 'http://' && url.substring(0, 8) !== 'https://') {
 						data.url = url = 'http://' + url;
 					}
 					
-					(url.substring(0, 7) === 'http://' ? http : https).get(url, function(res) {
-						
-						if (res.statusCode === 200 || res.statusCode === 301 || res.statusCode === 302) {
-							
-							var
-							// phantom
-							phantom = require('child_process').spawn('phantomjs', [NODE_CONFIG.rootPath + '/screencapture.js', encodeURIComponent(url)]);
-						    
-						    phantom.on('error', function() {
-								// ignore.
-						    });
-						    
-						    phantom.on('exit', function() {
-								
-						    });
-							
-							// 해당 URL이 이미 있으면 그것을 반환
-							self.get({
-								filter : {
-									url : url
-								}
-							}, {
-								success : function(savedData) {
-									ret({
-										savedData : savedData
-									});
-								},
-								notExists : function() {
-									f();
-								}
-							});
-						
-						} else {
+					// 해당 URL이 이미 등록되어 있으면 그것을 반환합니다.
+					self.get({
+						filter : {
+							url : url
+						}
+					}, {
+						success : function(savedData) {
 							ret({
-								validErrors : {
-									url : {
-										type : 'wrongURL'
-									}
+								savedData : savedData
+							});
+						},
+						
+						// 등록되어 있지 않다면 새로 등록합니다.
+						notExists : function() {
+							
+							// 접속되는 url 인지 확인합니다.
+							(url.substring(0, 7) === 'http://' ? http : https).get(url, function(res) {
+								
+								if (
+								// 짧.한국은 안됩니다.
+								url.substring(0, 11) !== 'http://짧.한국' 
+								// 제대로 된 응답 코드를 반환했나 확인합니다.
+								&& (res.statusCode === 200 || res.statusCode === 301 || res.statusCode === 302)) {
+									
+									// URL을 등록합니다.
+									f();
+								
+								} else {
+									ret({
+										validErrors : {
+											url : {
+												type : 'wrongURL'
+											}
+										}
+									});
 								}
+								
+							}).on('error', function() {
+								ret({
+									validErrors : {
+										url : {
+											type : 'wrongURL'
+										}
+									}
+								});
 							});
 						}
-						
-					}).on('error', function() {
-						ret({
-							validErrors : {
-								url : {
-									type : 'wrongURL'
-								}
-							}
-						});
 					});
 
 					return false;

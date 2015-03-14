@@ -13,7 +13,7 @@ page.viewportSize = {
 page.open(decodeURIComponent(system.args[1]), function(status) {
 	
 	if (status === 'success') {
-		page.render('__RF/KoreanURLShortener/' + system.args[1] + '.png');
+		page.render('__CAPTURE/' + system.args[1] + '.png');
 	}
 	
 	phantom.exit();

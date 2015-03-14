@@ -7,6 +7,9 @@ KoreanURLShortener.MAIN = METHOD({
 		// preview
 		preview,
 		
+		// capture
+		capture,
+		
 		// recent
 		recent,
 		
@@ -103,8 +106,17 @@ KoreanURLShortener.MAIN = METHOD({
 								preview.append('http://짧.한국/' + savedData.id);
 								preview.setHref('http://짧.한국/' + savedData.id);
 								
-								preview.append(IMG({
-									src : KoreanURLShortener.RF(encodeURIComponent(savedData.url))
+								capture.empty();
+								capture.append(A({
+									href : '/__CAPTURE/' + encodeURIComponent(savedData.url) + '.png',
+									target : '_blank',
+									c : IMG({
+										style : {
+											marginTop : 20,
+											width : 200
+										},
+										src : '/__CAPTURE/' + encodeURIComponent(savedData.url) + '.png'
+									})
 								}));
 							}
 						});
@@ -128,6 +140,13 @@ KoreanURLShortener.MAIN = METHOD({
 					target : '_blank',
 					c : 'http://짧.한국/하늘'
 				})
+			}),
+			
+			// capture
+			capture = DIV({
+				style : {
+					textAlign : 'center'
+				}
 			}),
 			
 			// recent
@@ -171,11 +190,17 @@ KoreanURLShortener.MAIN = METHOD({
 					textAlign : 'center',
 					paddingBottom : 40
 				},
-				c : [A({
-					href : 'https://www.facebook.com/mr.hanul',
-					target : '_blank',
-					c : '심영재'
-				}), '가 만들었어요.']
+				c : P({
+					c : [A({
+						href : 'https://github.com/Hanul/KoreanURLShortener',
+						target : '_blank',
+						c : '짧.한국은 오픈소스 입니다.'
+					}), BR(), A({
+						href : 'https://www.facebook.com/mr.hanul',
+						target : '_blank',
+						c : '심영재'
+					}), '가 만들었어요.']
+				})
 			})]
 		}).appendTo(BODY);
 		
@@ -191,6 +216,7 @@ KoreanURLShortener.MAIN = METHOD({
 						flt : 'left'
 					},
 					href : 'http://짧.한국/' + savedData.id,
+					target : '_blank',
 					c : 'http://짧.한국/' + savedData.id
 				}), DIV({
 					style : {
@@ -219,6 +245,7 @@ KoreanURLShortener.MAIN = METHOD({
 						flt : 'left'
 					},
 					href : 'http://짧.한국/' + savedData.id,
+					target : '_blank',
 					c : 'http://짧.한국/' + savedData.id
 				}), DIV({
 					style : {
