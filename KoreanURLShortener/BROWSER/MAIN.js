@@ -199,7 +199,15 @@ KoreanURLShortener.MAIN = METHOD({
 						href : 'https://www.facebook.com/mr.hanul',
 						target : '_blank',
 						c : '심영재'
-					}), '가 만들었어요.']
+					}), '가 만들었어요.', BR(), '문제가 있을 경우 ', A({
+						href : 'https://www.facebook.com/mr.hanul',
+						target : '_blank',
+						c : '제 페이스북'
+					}) ,'이나 ' + A({
+						href : 'https://github.com/Hanul/KoreanURLShortener',
+						target : '_blank',
+						c : 'GitHub'
+					}) + '에 이슈로 남겨주세요 :)']
 				})
 			})]
 		}).appendTo(BODY);
