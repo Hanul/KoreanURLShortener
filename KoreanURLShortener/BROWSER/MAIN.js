@@ -203,11 +203,11 @@ KoreanURLShortener.MAIN = METHOD({
 						href : 'https://www.facebook.com/mr.hanul',
 						target : '_blank',
 						c : '제 페이스북'
-					}) ,'이나 ' + A({
+					}) ,'이나 ', A({
 						href : 'https://github.com/Hanul/KoreanURLShortener',
 						target : '_blank',
 						c : 'GitHub'
-					}) + '에 이슈로 남겨주세요 :)']
+					}), '에 이슈로 남겨주세요 :)']
 				})
 			})]
 		}).appendTo(BODY);

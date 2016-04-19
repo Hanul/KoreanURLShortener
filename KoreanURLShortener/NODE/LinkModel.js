@@ -15,6 +15,8 @@ OVERRIDE(KoreanURLShortener.LinkModel, function(origin) {
 			
 			//IMPORT: https
 			https = require('https');
+			
+			process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
 			inner.on('create', {
 
@@ -105,7 +107,8 @@ OVERRIDE(KoreanURLShortener.LinkModel, function(origin) {
 									});
 								}
 								
-							}).on('error', function() {
+							}).on('error', function(e) {
+								
 								ret({
 									validErrors : {
 										url : {

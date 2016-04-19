@@ -82,9 +82,9 @@ KoreanURLShortener.MAIN = METHOD({
 							
 						} else {
 							
-							phantom = child_process.spawn('phantomjs', [NODE_CONFIG.rootPath + '/screencapture.js', url]);
+							phantom = child_process.spawn('phantomjs', ['--ignore-ssl-errors=yes', NODE_CONFIG.rootPath + '/screencapture.js', url]);
 						    
-						    phantom.on('error', function() {
+						    phantom.on('error', function(e) {
 								// ignore.
 						    });
 						    
