@@ -1,17 +1,12 @@
 KoreanURLShortener.LinkModel = OBJECT({
 
-	preset : function() {
-		'use strict';
-
+	preset : () => {
 		return KoreanURLShortener.MODEL;
 	},
 
-	params : function() {
-		'use strict';
+	params : () => {
 
-		var
-		// valid data set
-		validDataSet = {
+		let validDataSet = {
 			
 			url : {
 				notEmpty : true,

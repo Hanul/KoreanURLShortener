@@ -1,7 +1,6 @@
 KoreanURLShortener.MAIN = METHOD({
 	
-	run : function() {
-		'use strict';
+	run : () => {
 		
 		var
 		// preview

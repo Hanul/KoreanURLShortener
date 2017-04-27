@@ -13,7 +13,7 @@ KoreanURLShortener.MAIN = METHOD({
 		// capture uri matcher
 		captureURIMatcher = URI_MATCHER('__CAPTURE/{url}');
 
-		addRequestListener(function(requestInfo, response, onDisconnected, replaceRootPath, next) {
+		addRequestListener(function(requestInfo, response, replaceRootPath, next) {
 
 			var
 			// uri
@@ -30,33 +30,39 @@ KoreanURLShortener.MAIN = METHOD({
 			
 			if (uriMatchResult.checkIsMatched() === true) {
 				
-				KoreanURLShortener.LinkModel.update({
-					id : decodeURIComponent(uriMatchResult.getURIParams().id),
-					$inc : {
-						count : 1
-					}
-				}, {
+				try {
 					
-					notExists : function() {
+					KoreanURLShortener.LinkModel.update({
+						id : decodeURIComponent(uriMatchResult.getURIParams().id),
+						$inc : {
+							count : 1
+						}
+					}, {
 						
-						response({
-							statusCode : 302,
-							headers : {
-								'Location' : 'http://' + encodeURIComponent('짧.한국')
-							}
-						});
-					},
+						notExists : function() {
+							
+							response({
+								statusCode : 302,
+								headers : {
+									'Location' : 'http://' + encodeURIComponent('짧.한국')
+								}
+							});
+						},
+						
+						success : function(savedData) {
+	
+							response({
+								statusCode : 302,
+								headers : {
+									'Location' : savedData.url
+								}
+							});
+						}
+					});
 					
-					success : function(savedData) {
-
-						response({
-							statusCode : 302,
-							headers : {
-								'Location' : savedData.url
-							}
-						});
-					}
-				});
+				} catch(e) {
+					// ignore.
+				}
 				
 				return false;
 			
@@ -69,7 +75,7 @@ KoreanURLShortener.MAIN = METHOD({
 					url = catureURIMatchResult.getURIParams().url;
 					url = url.substring(0, url.length - 4);
 					
-					CHECK_IS_EXISTS_FILE(NODE_CONFIG.rootPath + '/__CAPTURE/' + url + '.png', function(isExists) {
+					CHECK_FILE_EXISTS(NODE_CONFIG.rootPath + '/__CAPTURE/' + url + '.png', function(isExists) {
 						
 						var
 						// phantom

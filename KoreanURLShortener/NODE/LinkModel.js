@@ -1,13 +1,12 @@
-OVERRIDE(KoreanURLShortener.LinkModel, function(origin) {
-	'use strict';
+OVERRIDE(KoreanURLShortener.LinkModel, (origin) => {
 
 	KoreanURLShortener.LinkModel = OBJECT({
 
-		preset : function() {
+		preset : () => {
 			return origin;
 		},
 
-		init : function(inner, self, params) {
+		init : (inner, self, params) => {
 			
 			var
 			//IMPORT: http
