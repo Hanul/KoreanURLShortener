@@ -47,7 +47,7 @@ OVERRIDE(KoreanURLShortener.LinkModel, (origin) => {
 								max : 55203
 							}));
 							
-							self.checkIsExists({
+							self.checkExists({
 								filter : {
 									id : id
 								}
